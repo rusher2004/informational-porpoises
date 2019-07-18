@@ -12,8 +12,10 @@ import './plugins/element.js'
 
 Vue.config.productionTip = false
 
+const server = document.location.hostname == 'localhost' ? 'http://localhost:4000' : 'https://api.informationalporpoises.com'
+
 const httpLink = new HttpLink({
-  uri: 'http://138.68.28.185:4000'
+  uri: server
 })
 
 const apolloClient = new ApolloClient({

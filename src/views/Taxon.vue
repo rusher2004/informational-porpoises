@@ -54,23 +54,12 @@ export default {
         data.species[0].pending_facts = []
         return data.species[0]
       }
-    },
-    taxon: {
-      query: GET_TAXON_QUERY,
-      variables () {
-        return { tax_id: this.$route.params.tax_id }
-      },
-      update(data) {
-        console.log('query', GET_TAXON_QUERY)
-        console.log('taxon data', data)
-        return data
-      }
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
   .taxon-container {
     display: flex;
   }

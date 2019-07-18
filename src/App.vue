@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header>
+      <el-header height="95px">
         <Header />
       </el-header>
       <el-main>
@@ -34,5 +34,25 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.taxon-container {
+  display: grid;
+  grid-template-rows: 100px auto;
+}
+.taxon-title {
+  text-align: left;
+}
+.taxon-title-name-big {
+  font-size: 2em;
+}
+.taxon-title-name-big {
+  font-size: 1.5em;
+  font-style: italic; 
+}
+.cards-title {
+  text-align: left;
+  font-size: 1.5em;
+  padding-left: 15px;
+  margin-top: -25px;
 }
 </style>
