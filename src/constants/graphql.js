@@ -28,7 +28,7 @@ query getKingdomDataQuery($tax_id: ID!) {
       class
       uuid
     }
-    phyla {
+    children {
       tax_id
       names {
         name
@@ -58,7 +58,7 @@ query getPhylumDataQuery($tax_id: ID!) {
         uuid
       }
     }
-    classes {
+    children {
       tax_id
       names {
         name
@@ -96,7 +96,7 @@ query getClassDataQuery($tax_id: ID!) {
         uuid
       }
     }
-    orders {
+    children {
       tax_id
       names {
         name
@@ -142,7 +142,7 @@ query getOrderDataQuery($tax_id: ID!) {
         uuid
       }
     }
-    families {
+    children {
       tax_id
       names {
         name
@@ -196,7 +196,7 @@ query getFamilyDataQuery($tax_id: ID!) {
         uuid
       }
     }
-    genera {
+    children {
       tax_id
       names {
         name
@@ -258,7 +258,7 @@ query getGenusDataQuery($tax_id: ID!) {
         uuid
       }
     }
-    species {
+    children {
       tax_id
       names {
         name
@@ -279,6 +279,15 @@ query getSpeciesDataQuery($tax_id: ID!) {
       name
       class
       uuid
+    }
+    facts {
+      text
+      source
+      created_at
+      uuid
+      creator {
+        username
+      }
     }
     kingdom {
       tax_id
@@ -328,7 +337,7 @@ query getSpeciesDataQuery($tax_id: ID!) {
         uuid
       }
     }
-    subspecies {
+    children {
       tax_id
       names {
         name

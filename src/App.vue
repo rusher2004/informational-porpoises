@@ -37,7 +37,7 @@ export default {
 }
 .taxon-container {
   display: grid;
-  grid-template-rows: 100px auto;
+  grid-template-rows: 50px auto;
 }
 .taxon-title {
   text-align: left;
@@ -51,6 +51,7 @@ export default {
 }
 .cards-title {
   text-align: left;
+  text-transform: capitalize;
   font-size: 1.5em;
   padding-left: 15px;
   margin-top: -25px;

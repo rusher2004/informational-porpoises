@@ -2,7 +2,8 @@
   <div class="header-container">
     <div class="title-and-search">
       <a href="/"><i class="el-icon-discover"></i></a>
-      <h1 class="site-name">Informational Porpoises</h1>
+      <h1 class="site-name hidden-xs-only">Informational Porpoises</h1>
+      <h1 class="site-name hidden-sm-and-up">IP</h1>
       <el-autocomplete class="search-bar" popper-class="search-results" v-model="search_text" :fetch-suggestions="get_results" placeholder="Search..." @select="handle_select">
         <template slot-scope="{ item }">
           <div class="search-result-item">
@@ -32,6 +33,7 @@ export default {
   },
   data () {
     return {
+      isAuthenticated: false,
       search_results: [],
       search_text: '',
       search_timeout: null,
@@ -41,16 +43,20 @@ export default {
     get_results (query_string, cb) {
       var items = this.search_results
       var results = query_string ? items.filter(this.create_filter(query_string)) : items
-
-      clearTimeout(this.search_timeout)
-      this.search_timeout = setTimeout(() => {
-        cb(results)
-      }, 1000 * Math.random())
+      cb(results)
+      // clearTimeout(this.search_timeout)
+      // this.search_timeout = setTimeout(() => {
+      //   cb(results)
+      // }, 1000)
     },
     create_filter (query_string) {
       return (item) => {
-        if (item.taxon.labels[0] === 'no_rank') return
-        return (item.name.toLowerCase().indexOf(query_string.toLowerCase()) === 0)
+        if (item.taxon.labels.includes('no_rank')) return
+        if (item.name.toLowerCase().includes('virus')) return
+        if (item.name.toLowerCase().includes('influenza')) return
+        if (item.name.toLowerCase().includes(':')) return
+        if (item.name.toLowerCase().includes('.')) return
+        return item
       }
     },
     handle_select (item) {
@@ -69,6 +75,7 @@ export default {
         return !this.search_text
       },
       update (results) {
+        // console.log('result', results.name_search)
         return results.name_search
       }
     }

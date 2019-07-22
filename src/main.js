@@ -8,7 +8,10 @@ import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
+
+// UI stuff
 import './plugins/element.js'
+import 'element-ui/lib/theme-chalk/display.css';
 
 Vue.config.productionTip = false
 

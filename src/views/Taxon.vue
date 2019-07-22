@@ -1,58 +1,105 @@
 <template>
-  <div class="taxon-container">
-    <div v-if="loading">loading...</div>
-    <div class="record-view" v-if="animal">
-      <div class="record-names"><span class="title-common-name">{{animal.common_name}}</span><span class="title-scientific-name"> / {{animal.scientific_name}}</span></div>
-      <div class="fact-box">
-        <div v-if="animal.pending_facts.length">Did you know...?</div>
-        <div
-          class="record-facts"
-          v-for="fact in animal.pending_facts"
-          v-bind:key="fact.uuid">
-          <div>{{fact.text}}</div>
-          <div>source: {{fact.source}}</div>
-          <div>Created by {{fact.creator.username}}</div>
-        </div>
-      </div>
+  <div class="taxon-container" v-if="taxon">
+    <div class="taxon-title">
+      <span class="taxon-title-name-big">{{taxon.common_name}}</span><span class="taxon-title-name-small"> / {{taxon.display_name}}</span>
+    </div>
+    <div class="fact-view" v-if="taxon.facts">
+      <div class="fact-title">Did you know...?</div>
+      <Fact v-for="fact in taxon.facts" v-bind:key="fact.uuid" v-bind:fact="fact"></Fact>
+    </div>
+    <div class="card-view" v-if="taxon.children">
+      <div class="cards-title">{{taxon.children_type}}</div>
+      <Cards v-bind:items="taxon.children" v-bind:type="taxon.children_type"></Cards>
     </div>
   </div>
 </template>
 
 <script>
-import { GET_SPECIES_WITH_FACTS_QUERY, GET_TAXON_QUERY, GET_SPECIES_QUERY } from '../constants/graphql'
+import gql from 'graphql-tag'
+import Cards from '../components/Cards'
+import Fact from '../components/Fact'
+import { get_display_name, set_breadcrumbs, sort_by_name } from '../constants/helpers'
+import {
+  GET_KINGDOM_DATA_QUERY,
+  GET_PHYLUM_DATA_QUERY,
+  GET_CLASS_DATA_QUERY,
+  GET_ORDER_DATA_QUERY,
+  GET_FAMILY_DATA_QUERY,
+  GET_GENUS_DATA_QUERY,
+  GET_SPECIES_DATA_QUERY,
+  GET_SUBSPECIES_DATA_QUERY
+  } from '../constants/graphql'
 
 export default {
   name: 'Taxon',
+  components: {
+    Cards,
+    Fact
+  },
   data () {
     return {
-      thing: '',
-      animal: null,
-      taxon: null,
-      loading: 0
+      taxon: null
     }
   },
   methods: {
-    log_animal () {
-      console.log("animal", this.animal)
-    }
+    get_display_name,
+    set_breadcrumbs,
+    sort_by_name,
   },
   apollo: {
-    animal: {
-      query: GET_SPECIES_QUERY,
+    taxon: {
+      query() {
+        var query = null
+        switch (this.$route.name) {
+          case 'kingdom':
+            query = GET_KINGDOM_DATA_QUERY
+            break
+          case 'phylum':
+            query = GET_PHYLUM_DATA_QUERY
+            break
+          case 'class':
+            query = GET_CLASS_DATA_QUERY
+            break
+          case 'order':
+            query = GET_ORDER_DATA_QUERY
+            break
+          case 'family':
+            query = GET_FAMILY_DATA_QUERY
+            break
+          case 'genus':
+            query = GET_GENUS_DATA_QUERY
+            break
+          case 'species':
+            query = GET_SPECIES_DATA_QUERY
+            break
+          case 'subspecies':
+            query = GET_SUBSPECIES_DATA_QUERY
+        }
+        return query
+      },
       variables () {
-        return { tax_id: this.$route.params.tax_id }
+        return {
+          tax_id: this.$route.params.tax_id
+          }
       },
       update(data) {
-        for (let n of data.species[0].names) {
-          if (n.class === 'genbank_common_name') {
-            data.species[0].common_name = n.name
-          }
-          if (n.class === 'scientific_name') {
-            data.species[0].scientific_name = n.name
-          }
+        let taxon = data[this.$route.name][0]
+        taxon.hierarchy = [taxon.kingdom || null, taxon.phylum || null, taxon.class || null, taxon.order || null, taxon.family || null, taxon.genus || null, taxon.species || null]
+        taxon.hierarchy = taxon.hierarchy.filter(h => h !== null)
+        this.get_display_name(taxon)
+        for (let h of taxon.hierarchy) {
+          this.get_display_name(h)
         }
-        data.species[0].pending_facts = []
-        return data.species[0]
+        if (taxon.children && taxon.children.length) {
+          for (let c of taxon.children) {
+            this.get_display_name(c)
+          }
+          this.sort_by_name(taxon.children)
+          taxon.children_type = taxon.children[0].__typename
+        }
+        let breadcrumbs = this.set_breadcrumbs(taxon)
+        this.$store.commit('setBreadcrumbs', breadcrumbs)
+        return taxon
       }
     }
   }
@@ -60,18 +107,8 @@ export default {
 </script>
 
 <style scoped>
-  .taxon-container {
-    display: flex;
-  }
-  .record-view {
-    display: flex;
-    flex-direction: column;
-  }
-  .title-common-name {
-    font-size: 2em;
-  }
-  .title-scientific-name {
+  .fact-title {
     font-size: 1.5em;
-    font-style: italic;
+    text-align: left;
   }
 </style>
