@@ -15,6 +15,22 @@ export default {
   props: {
     items: Array,
     type: String
+  },
+  created() {
+    for (let item of this.items) {
+      // Take the display name of out the list of names shown in the card body
+      item.names = item.names.filter(n => n.name !== item.display_name)
+      // Remove any leftover duplicates
+      let name_list = [...new Set(item.names.map(n => n.name.toLowerCase()))]
+      let temp_names = item.names
+      item.names = []
+      for (let i = 0; i < name_list.length; i++) {
+        let found_name = temp_names.find(function(element) {
+          return element.name.toLowerCase() === name_list[i]
+        })
+        item.names.push(found_name)
+      }
+    }
   }
 }
 </script>

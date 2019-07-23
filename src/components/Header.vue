@@ -1,9 +1,10 @@
 <template>
   <div class="header-container">
     <div class="title-and-search">
-      <a href="/"><i class="el-icon-discover"></i></a>
-      <h1 class="site-name hidden-xs-only">Informational Porpoises</h1>
-      <h1 class="site-name hidden-sm-and-up">IP</h1>
+      <a href="/">
+        <h1 class="site-name hidden-xs-only">Informational Porpoises</h1>
+        <h1 class="site-name hidden-sm-and-up">IP</h1>
+      </a>
       <el-autocomplete class="search-bar" popper-class="search-results" v-model="search_text" :fetch-suggestions="get_results" placeholder="Search..." @select="handle_select">
         <template slot-scope="{ item }">
           <div class="search-result-item">
@@ -84,6 +85,13 @@ export default {
 </script>
 
 <style>
+  a {
+    color: #2196f3;
+    text-decoration: none;
+  }
+  a:visited {
+    color: #2196f3;
+  }
   .title-and-search {
     display: flex;
     align-items: center;

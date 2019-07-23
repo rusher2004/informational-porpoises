@@ -3,7 +3,7 @@
     <div class="taxon-title">
       <span class="taxon-title-name-big">{{taxon.common_name}}</span><span class="taxon-title-name-small"> / {{taxon.display_name}}</span>
     </div>
-    <div class="fact-view" v-if="taxon.facts">
+    <div class="fact-view" v-if="taxon.facts && taxon.facts.length">
       <div class="fact-title">Did you know...?</div>
       <Fact v-for="fact in taxon.facts" v-bind:key="fact.uuid" v-bind:fact="fact"></Fact>
     </div>
@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
 import Cards from '../components/Cards'
 import Fact from '../components/Fact'
 import { get_display_name, set_breadcrumbs, sort_by_name } from '../constants/helpers'
