@@ -1,4 +1,14 @@
 # web
+Informational Porpoises is a hobby project where I've compiled taxonomy information into a graph database. The goal is to allow you to browse the taxonomy trees, and view/share interesting facts about the natural world.
+
+The database is Neo4j, front-end is built with Vue, ElementUI for the UI, and GraphQL & Apollo serving the data.
+
+## Current Status
+The database has been seeded, the taxonomy browser is (mostly) functional and fully searchable.
+
+## Next step
+Implementing user authentication to allow the uploading of facts.
+All facts will require a source to provided and will be verified by an admin user before showing on the front end.
 
 ## Project setup
 ```
